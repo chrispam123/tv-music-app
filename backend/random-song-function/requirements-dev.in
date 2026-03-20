@@ -1,0 +1,36 @@
+# requirements-dev.in
+# Dependencias de desarrollo - solo para uso local y CI/CD
+# Estas dependencias NUNCA se empaquetan ni suben a AWS Lambda
+
+# Incluir las dependencias de producción como constraints
+# Esto asegura que las versiones de boto3 y sus dependencias sean
+# idénticas entre tu entorno de desarrollo y el runtime de producción
+-c requirements.txt
+
+# Framework de testing
+# pytest es el estándar de facto para testing en Python
+pytest>=8.0.0,<9.0.0
+
+# Cobertura de código - mide qué porcentaje de tu código está cubierto por tests
+# En proyectos profesionales se suelen requerir mínimos como 80% de cobertura
+pytest-cov>=4.1.0,<5.0.0
+
+# Moto permite simular servicios de AWS localmente sin hacer llamadas reales
+# El extra [s3] instala las dependencias necesarias para mockear S3 específicamente
+# Esto es crítico porque no quieres que tus tests unitarios creen buckets reales en AWS
+moto[s3]>=5.0.0,<6.0.0
+
+# Ruff es un linter y formateador de código ultra-rápido escrito en Rust
+# Reemplaza herramientas como flake8, isort, black en una sola herramienta
+# Su velocidad hace que sea práctico ejecutarlo en pre-commit hooks sin fricción
+ruff>=0.3.0,<1.0.0
+
+# Type checking estático - opcional pero altamente recomendado
+# mypy analiza type hints en tu código y detecta errores de tipos antes de ejecutar
+# Esto previene bugs comunes como pasar un string donde se espera un int
+mypy>=1.8.0,<2.0.0
+
+# Type stubs para boto3 - permite que mypy entienda los tipos de boto3
+# Sin esto, mypy no sabría qué métodos y atributos tienen los clientes de boto3
+# El extra [s3] instala específicamente los stubs para el cliente de S3
+boto3-stubs[s3]>=1.34.0
