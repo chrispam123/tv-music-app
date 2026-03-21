@@ -16,6 +16,7 @@ on:
       - '.gitignore'
       - '.tool-versions'
       - '.python-version'
+      - 'scripts/**'
 
 # Permisos mínimos necesarios
 permissions:
@@ -29,33 +30,33 @@ jobs:
     strategy:
       matrix:
         environment: [dev]
-    
+
     defaults:
       run:
         working-directory: infraestructure/environments/${{ matrix.environment }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.4
-      
+
       - name: Terraform Format Check
         id: fmt
         run: terraform fmt -check -recursive
         continue-on-error: true
-      
+
       - name: Terraform Init
         id: init
         run: terraform init -backend=false
-      
+
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
-      
+
       - name: Comment PR with Results
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -64,25 +65,25 @@ jobs:
             const output = `#### Terraform Format and Style 🖌 \`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization ⚙️ \`${{ steps.init.outcome }}\`
             #### Terraform Validation 🤖 \`${{ steps.validate.outcome }}\`
-            
+
             <details><summary>Validation Output</summary>
-            
+
             \`\`\`
             ${{ steps.validate.outputs.stdout }}
             \`\`\`
-            
+
             </details>
-            
+
             *Environment: ${{ matrix.environment }}*
             *Pusher: @${{ github.actor }}*`;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
             });
-      
+
       - name: Fail if Format Check Failed
         if: steps.fmt.outcome == 'failure'
         run: exit 1
@@ -90,26 +91,26 @@ jobs:
   python-lint:
     name: Python Linting
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install Dependencies
         working-directory: backend/random-song-function
         run: |
           python -m pip install --upgrade pip
           pip install ruff
-      
+
       - name: Run Ruff Linter
         working-directory: backend/random-song-function
         run: ruff check .
-      
+
       - name: Run Ruff Formatter Check
         working-directory: backend/random-song-function
         run: ruff format --check .
@@ -117,23 +118,23 @@ jobs:
   python-tests:
     name: Python Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
+
       - name: Install Dependencies
         working-directory: backend/random-song-function
         run: |
           python -m pip install --upgrade pip
           pip install pip-tools
           pip-sync requirements-dev.txt
-      
+
       - name: Run Tests
         working-directory: backend/random-song-function
         run: pytest -v --cov=src --cov-report=term-missing
@@ -141,11 +142,11 @@ jobs:
   security-scan:
     name: Security Scanning
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -153,7 +154,7 @@ jobs:
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
-      
+
       - name: Upload Trivy results to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
         if: always()
