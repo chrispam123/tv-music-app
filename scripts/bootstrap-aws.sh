@@ -61,18 +61,18 @@ else
         --region "${AWS_REGION}" \
         --create-bucket-configuration LocationConstraint="${AWS_REGION}" \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Bucket creado: ${TERRAFORM_STATE_BUCKET}"
-    
+
     # Habilitar versionado
     # Esto permite recuperar versiones anteriores del estado si algo sale mal
     aws s3api put-bucket-versioning \
         --bucket "${TERRAFORM_STATE_BUCKET}" \
         --versioning-configuration Status=Enabled \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Versionado habilitado"
-    
+
     # Habilitar encriptación del lado del servidor
     # Los archivos de estado pueden contener información sensible
     aws s3api put-bucket-encryption \
@@ -85,9 +85,9 @@ else
             }]
         }' \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Encriptación habilitada (AES256)"
-    
+
     # Bloquear acceso público
     # El bucket de estado NUNCA debe ser público
     aws s3api put-public-access-block \
@@ -95,7 +95,7 @@ else
         --public-access-block-configuration \
             "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true" \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Acceso público bloqueado"
 fi
 
@@ -118,7 +118,7 @@ else
         --user-name "${DEV_USER_NAME}" \
         --tags Key=Project,Value="${PROJECT_NAME}" Key=Purpose,Value=Development \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Usuario creado: ${DEV_USER_NAME}"
 fi
 
@@ -203,6 +203,25 @@ cat > /tmp/terraform-policy.json << 'EOF'
                 "logs:*"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "ManageKMSKeys",
+            "Effect": "Allow",
+            "Action": [
+                "kms:CreateKey",
+                "kms:DescribeKey",
+                "kms:GetKeyPolicy",
+                "kms:PutKeyPolicy",
+                "kms:ScheduleKeyDeletion",
+                "kms:EnableKeyRotation",
+                "kms:TagResource",
+                "kms:UntagResource",
+                "kms:CreateAlias",
+                "kms:DeleteAlias",
+                "kms:UpdateAlias",
+                "kms:ListAliases"
+            ],
+            "Resource": "*"
         }
     ]
 }
@@ -220,14 +239,14 @@ POLICY_ARN="arn:aws:iam::${ACCOUNT_ID}:policy/${POLICY_NAME}"
 if aws iam get-policy --policy-arn "${POLICY_ARN}" --profile "${AWS_PROFILE}" 2>/dev/null; then
     # La política existe, obtener la versión por defecto actual
     echo "⚠ La política ${POLICY_NAME} ya existe, creando nueva versión..."
-    
+
     # Crear una nueva versión de la política
     aws iam create-policy-version \
         --policy-arn "${POLICY_ARN}" \
         --policy-document file:///tmp/terraform-policy.json \
         --set-as-default \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Política actualizada con nueva versión"
 else
     # La política no existe, crearla
@@ -237,7 +256,7 @@ else
         --description "Permisos para gestionar infraestructura del proyecto ${PROJECT_NAME} con Terraform" \
         --tags Key=Project,Value="${PROJECT_NAME}" \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Política creada: ${POLICY_NAME}"
 fi
 
@@ -249,7 +268,7 @@ else
         --user-name "${DEV_USER_NAME}" \
         --policy-arn "${POLICY_ARN}" \
         --profile "${AWS_PROFILE}"
-    
+
     echo "✓ Política adjuntada al usuario ${DEV_USER_NAME}"
 fi
 
@@ -274,6 +293,3 @@ echo "  - Bucket S3: ${TERRAFORM_STATE_BUCKET}"
 echo "  - Usuario IAM: ${DEV_USER_NAME}"
 echo "  - Política IAM: ${POLICY_NAME}"
 echo ""
-
-
-
