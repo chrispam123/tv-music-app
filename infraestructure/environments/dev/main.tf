@@ -13,7 +13,7 @@ module "music_storage" {
   project_name       = "tv-music-app"
   environment        = "dev"
   music_files_prefix = "music-files"
-  enable_versioning  = false  # No versioning needed in dev
+  enable_versioning  = false # No versioning needed in dev
 
   tags = {
     ManagedBy = "Terraform"
