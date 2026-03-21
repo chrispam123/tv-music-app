@@ -1,6 +1,6 @@
 name: CI - Continuous Integration
 
-# Se ejecuta automáticamente en PRs a develop y main
+# Se ejecuta automáticamente en PRs a develop y main todo
 on:
   pull_request:
     branches:
@@ -10,6 +10,10 @@ on:
       - 'infraestructure/**'
       - 'backend/**'
       - '.github/workflows/**'
+      - '.pre-commit-config.yaml'
+      - 'requirements*.in'
+      - 'requirements*.txt'
+
 
 # Permisos mínimos necesarios
 permissions:
