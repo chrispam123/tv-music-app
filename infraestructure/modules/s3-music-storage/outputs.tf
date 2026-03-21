@@ -25,3 +25,13 @@ output "music_files_prefix" {
   description = "The prefix where music files are stored"
   value       = var.music_files_prefix
 }
+output "kms_key_id" {
+  description = "The ID of the KMS key used for encryption"
+  value       = aws_kms_key.s3_encryption.id
+}
+
+output "kms_key_arn" {
+  description = "The ARN of the KMS key used for encryption"
+  value       = aws_kms_key.s3_encryption.arn
+}
+

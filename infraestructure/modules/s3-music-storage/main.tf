@@ -28,14 +28,36 @@ resource "aws_s3_bucket_versioning" "music_storage" {
     status = var.enable_versioning ? "Enabled" : "Disabled"
   }
 }
-# Server-side encryption configuration
+# KMS key for bucket encryption (Customer Managed Key)
+resource "aws_kms_key" "s3_encryption" {
+  description             = "KMS key for ${local.bucket_name} encryption"
+  deletion_window_in_days = 7
+  enable_key_rotation     = true
+
+  tags = merge(
+    {
+      Name    = "${local.bucket_name}-kms-key"
+      Purpose = "S3 bucket encryption"
+    },
+    var.tags
+  )
+}
+
+resource "aws_kms_alias" "s3_encryption" {
+  name          = "alias/${local.bucket_name}"
+  target_key_id = aws_kms_key.s3_encryption.key_id
+}
+
+# Server-side encryption configuration with Customer Managed Key
 resource "aws_s3_bucket_server_side_encryption_configuration" "music_storage" {
   bucket = aws_s3_bucket.music_storage.id
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.s3_encryption.arn
     }
+    bucket_key_enabled = true
   }
 }
 # Block all public access to the bucket
