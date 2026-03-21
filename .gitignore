@@ -28,7 +28,8 @@ wheels/
 *.tfstate.*
 .terraform.lock.hcl
 crash.log
-
+*.tfplan
+*.tfplan.json
 # IDEs
 .vscode/
 .idea/
