@@ -10,6 +10,12 @@ on:
       - 'infraestructure/**'
       - 'backend/**'
       - '.github/workflows/**'
+      - '.pre-commit-config.yaml'
+      - 'requirements*.in'
+      - 'requirements*.txt'
+      - '.gitignore'
+      - '.tool-versions'
+      - '.python-version'
 
 # Permisos mínimos necesarios
 permissions:
