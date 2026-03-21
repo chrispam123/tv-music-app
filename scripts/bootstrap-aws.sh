@@ -214,6 +214,8 @@ cat > /tmp/terraform-policy.json << 'EOF'
                 "kms:PutKeyPolicy",
                 "kms:ScheduleKeyDeletion",
                 "kms:EnableKeyRotation",
+                "kms:GetKeyRotationStatus",
+                "kms:DisableKeyRotation",
                 "kms:TagResource",
                 "kms:UntagResource",
                 "kms:CreateAlias",
