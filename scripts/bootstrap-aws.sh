@@ -144,14 +144,7 @@ cat > /tmp/terraform-policy.json << 'EOF'
                 "arn:aws:s3:::BUCKET_NAME/*"
             ]
         },
-        {
-            "Sid": "ManageLambdaFunctions",
-            "Effect": "Allow",
-            "Action": [
-                "lambda:*"
-            ],
-            "Resource": "*"
-        },
+
         {
             "Sid": "ManageS3Buckets",
             "Effect": "Allow",
@@ -227,7 +220,38 @@ cat > /tmp/terraform-policy.json << 'EOF'
                 "kms:ListKeys"
             ],
             "Resource": "*"
+        },
+
+        {
+            "Sid": "ManageLambdaFunctions",
+            "Effect": "Allow",
+            "Action": [
+               "lambda:*"
+            ],
+            "Resource": "*"
+        },
+
+         {
+            "Sid": "ManageLambdaIAMRoles",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:GetRole",
+                "iam:PassRole",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:PutRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:GetRolePolicy",
+                "iam:ListRolePolicies",
+                "iam:ListAttachedRolePolicies",
+                "iam:TagRole",
+                "iam:UntagRole"
+            ],
+            "Resource": "arn:aws:iam::*:role/tv-music-app-*"
         }
+
     ]
 }
 EOF
