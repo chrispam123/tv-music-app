@@ -19,4 +19,18 @@ module "music_storage" {
     ManagedBy = "Terraform"
   }
 }
+# Lambda function for random song selection
+module "random_song_lambda" {
+  source = "../../modules/lambda-random-song"
 
+  project_name      = var.project_name
+  environment       = var.environment
+  music_bucket_name = module.music_storage.bucket_id
+  music_bucket_arn  = module.music_storage.bucket_arn
+
+  timeout            = 10
+  memory_size        = 128
+  log_retention_days = 7
+
+  tags = var.tags
+}
