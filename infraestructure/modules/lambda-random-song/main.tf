@@ -1,10 +1,9 @@
 # Lambda Random Song Function Module
 # Creates Lambda function that generates presigned URLs for random music files
-
 # Package the Lambda function code into a ZIP file
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_dir  = "${path.root}/../../backend/random-song-function/src"
+  source_dir  = "${path.module}/../../../backend/random-song-function/src"
   output_path = "${path.module}/lambda_function.zip"
 }
 
