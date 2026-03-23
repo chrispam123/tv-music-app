@@ -4,7 +4,7 @@
 data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = "${path.module}/../../../backend/random-song-function/src"
-  output_path = "${path.module}/lambda_function.zip"
+  output_path = "${path.root}/.terraform/lambda_function.zip"
 }
 
 # IAM role for Lambda function
