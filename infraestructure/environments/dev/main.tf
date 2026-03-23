@@ -23,13 +23,32 @@ module "music_storage" {
 module "random_song_lambda" {
   source = "../../modules/lambda-random-song"
 
-  project_name      = var.project_name
-  environment       = var.environment
-  music_bucket_name = module.music_storage.bucket_id
-  music_bucket_arn  = module.music_storage.bucket_arn
+  project_name             = var.project_name
+  environment              = var.environment
+  music_bucket_name        = module.music_storage.bucket_id
+  music_bucket_arn         = module.music_storage.bucket_arn
+  music_bucket_kms_key_arn = module.music_storage.kms_key_arn
+
 
   timeout            = 10
   memory_size        = 128
+  log_retention_days = 7
+
+  tags = var.tags
+}
+
+# API Gateway for exposing Lambda function
+module "api_gateway" {
+  source = "../../modules/api-gateway"
+
+  project_name         = var.project_name
+  environment          = var.environment
+  lambda_function_name = module.random_song_lambda.function_name
+  lambda_invoke_arn    = module.random_song_lambda.invoke_arn
+
+
+
+  cors_allow_origins = ["*"]
   log_retention_days = 7
 
   tags = var.tags

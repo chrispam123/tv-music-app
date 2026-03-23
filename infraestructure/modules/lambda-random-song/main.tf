@@ -57,7 +57,17 @@ resource "aws_iam_role_policy" "lambda_s3_policy" {
           var.music_bucket_arn,
           "${var.music_bucket_arn}/*"
         ]
+      },
+
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        Resource = var.music_bucket_kms_key_arn
       }
+
     ]
   })
 }
