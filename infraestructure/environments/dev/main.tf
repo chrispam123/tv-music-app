@@ -54,12 +54,25 @@ module "api_gateway" {
   tags = var.tags
 }
 
-# Frontend hosting on S3
+# CloudFront distribution for frontend
+module "cloudfront" {
+  source = "../../modules/cloudfront-distribution"
+
+  project_name                   = var.project_name
+  environment                    = var.environment
+  s3_bucket_name                 = module.frontend_hosting.bucket_name
+  s3_bucket_regional_domain_name = module.frontend_hosting.bucket_regional_domain_name
+
+  tags = var.tags
+}
+
+# Frontend hosting on S3 (private, accessed via CloudFront)
 module "frontend_hosting" {
   source = "../../modules/s3-frontend-hosting"
 
-  project_name = var.project_name
-  environment  = var.environment
+  project_name                = var.project_name
+  environment                 = var.environment
+  cloudfront_distribution_arn = module.cloudfront.distribution_arn
 
   tags = var.tags
 }
