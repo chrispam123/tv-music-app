@@ -8,12 +8,18 @@ variable "environment" {
   type        = string
 }
 
+variable "s3_bucket_name" {
+  description = "Name of the S3 bucket to use as origin"
+  type        = string
+}
+
+variable "s3_bucket_regional_domain_name" {
+  description = "Regional domain name of the S3 bucket"
+  type        = string
+}
+
 variable "tags" {
   description = "Additional tags to apply to resources"
   type        = map(string)
   default     = {}
-}
-variable "cloudfront_distribution_arn" {
-  description = "ARN of the CloudFront distribution allowed to access this bucket"
-  type        = string
 }

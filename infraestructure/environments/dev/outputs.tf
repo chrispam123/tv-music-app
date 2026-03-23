@@ -32,11 +32,16 @@ output "api_invoke_url" {
 }
 # Outputs from Frontend Hosting module
 output "frontend_website_url" {
-  description = "URL to access the frontend in TV browser"
-  value       = module.frontend_hosting.website_url
+  description = "HTTPS URL to access the frontend via CloudFront"
+  value       = module.cloudfront.distribution_url
 }
 
 output "frontend_bucket_name" {
   description = "Name of the frontend hosting bucket"
   value       = module.frontend_hosting.bucket_name
+}
+
+output "cloudfront_distribution_id" {
+  description = "ID of the CloudFront distribution"
+  value       = module.cloudfront.distribution_id
 }

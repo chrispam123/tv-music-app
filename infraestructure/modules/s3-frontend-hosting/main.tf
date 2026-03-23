@@ -1,7 +1,7 @@
 # S3 Frontend Hosting Module
-# Creates S3 bucket configured for static website hosting
+# Creates private S3 bucket for CloudFront origin
 
-# S3 bucket for frontend
+# S3 bucket for frontend (private)
 resource "aws_s3_bucket" "frontend" {
   bucket = "${var.project_name}-${var.environment}-frontend"
 
@@ -14,30 +14,17 @@ resource "aws_s3_bucket" "frontend" {
   )
 }
 
-# Website configuration
-resource "aws_s3_bucket_website_configuration" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
-
-  index_document {
-    suffix = "index.html"
-  }
-
-  error_document {
-    key = "index.html"
-  }
-}
-
-# Public access block configuration (allow public read)
+# Block all public access (bucket is private)
 resource "aws_s3_bucket_public_access_block" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
-# Bucket policy for public read access
+# Bucket policy - allow access only from CloudFront
 resource "aws_s3_bucket_policy" "frontend" {
   bucket = aws_s3_bucket.frontend.id
 
@@ -45,11 +32,18 @@ resource "aws_s3_bucket_policy" "frontend" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.frontend.arn}/*"
+        Sid    = "AllowCloudFrontServicePrincipal"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.frontend.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = var.cloudfront_distribution_arn
+          }
+        }
       }
     ]
   })
