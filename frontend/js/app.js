@@ -47,18 +47,19 @@ async function loadMusic() {
             throw new Error('No se recibió URL de música');
         }
 
-        // Load and play music
+        // Load music
         audioElement.src = data.url;
         songNameElement.textContent = data.filename || 'Música aleatoria';
+        statusElement.textContent = 'Listo para reproducir';
+        statusElement.className = 'status success';
 
-        audioElement.play()
-            .then(() => {
-                statusElement.textContent = 'Reproduciendo';
-                statusElement.className = 'status success';
-            })
-            .catch(error => {
-                throw new Error(`Error al reproducir: ${error.message}`);
-            });
+        // Show play button on first load
+        if (!window.musicStarted) {
+            playButton.style.display = 'block';
+        } else {
+            // Auto-play subsequent songs
+            playMusic();
+        }
 
         // Load next song when current one ends
         audioElement.onended = () => {
@@ -76,13 +77,34 @@ async function loadMusic() {
     }
 }
 
+// Play music function
+function playMusic() {
+    audioElement.play()
+        .then(() => {
+            statusElement.textContent = 'Reproduciendo';
+            statusElement.className = 'status success';
+            playButton.style.display = 'none';
+            window.musicStarted = true;
+        })
+        .catch(error => {
+            console.error('Error playing:', error);
+            statusElement.textContent = `Error al reproducir: ${error.message}`;
+            statusElement.className = 'status error';
+        });
+}
+
 // Initialize
+const playButton = document.getElementById('play-button');
+
 updateClock();
 updateDate();
 setInterval(updateClock, 1000);
 
 // Start loading music when page loads
 loadMusic();
+
+// Handle play button click
+playButton.addEventListener('click', playMusic);
 
 // Handle audio errors
 audioElement.onerror = () => {
