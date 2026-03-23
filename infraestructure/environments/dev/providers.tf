@@ -13,8 +13,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "eu-west-1"
-  profile = "tv-music-dev"
+  region = "eu-west-1"
 
   default_tags {
     tags = {
