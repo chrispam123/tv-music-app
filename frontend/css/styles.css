@@ -1,0 +1,65 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+    padding: 40px;
+}
+
+.clock-container {
+    margin-bottom: 60px;
+}
+
+.clock {
+    font-size: 120px;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    margin-bottom: 20px;
+    letter-spacing: 8px;
+}
+
+.date {
+    font-size: 48px;
+    color: #a8dadc;
+    text-shadow: 0 0 10px rgba(168, 218, 220, 0.3);
+}
+
+.music-info {
+    margin-top: 40px;
+}
+
+.status {
+    font-size: 36px;
+    color: #f1faee;
+    margin-bottom: 20px;
+}
+
+.song-name {
+    font-size: 42px;
+    color: #ffd60a;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255, 214, 10, 0.4);
+    min-height: 50px;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.success {
+    color: #51cf66;
+}
