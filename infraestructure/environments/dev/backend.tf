@@ -16,6 +16,7 @@ terraform {
     encrypt = true
 
     # Use the tv-music-dev profile for AWS credentials
-    profile = "tv-music-dev"
+    # profile removed - uses AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY env vars in CI/CD
+    # For local development, use: export AWS_PROFILE=tv-music-dev
   }
 }
