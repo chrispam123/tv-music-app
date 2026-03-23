@@ -41,3 +41,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "music_bucket_kms_key_arn" {
+  description = "ARN of the KMS key used to encrypt the music bucket"
+  type        = string
+}

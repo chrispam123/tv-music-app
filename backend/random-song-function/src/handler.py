@@ -3,6 +3,7 @@ import boto3
 import random
 import os
 from botocore.exceptions import ClientError
+from botocore.config import Config
 
 
 def lambda_handler(event, context):
@@ -27,8 +28,8 @@ def lambda_handler(event, context):
             ),
         }
 
-    # Initialize S3 client
-    s3_client = boto3.client("s3")
+    # Initialize S3 client with Signature Version 4 (required for KMS encryption)
+    s3_client = boto3.client("s3", config=Config(signature_version="s3v4"))
 
     try:
         # List all objects in the bucket

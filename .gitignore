@@ -47,4 +47,6 @@ Thumbs.db
 .venv/
 #pip-tools
 *.txt.lock
-
+#excluyo
+*.zip
+musica/
