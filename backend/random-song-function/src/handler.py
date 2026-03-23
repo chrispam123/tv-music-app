@@ -23,6 +23,12 @@ def lambda_handler(event, context):
     if not bucket_name:
         return {
             "statusCode": 500,
+            "headers": {
+                "content-type": "application/json",
+                "access-control-allow-origin": "*",
+                "access-control-allow-methods": "GET, OPTIONS",
+                "access-control-allow-headers": "Content-Type",
+            },
             "body": json.dumps(
                 {"error": "MUSIC_BUCKET_NAME environment variable not set"}
             ),
@@ -39,6 +45,12 @@ def lambda_handler(event, context):
         if "Contents" not in response or len(response["Contents"]) == 0:
             return {
                 "statusCode": 404,
+                "headers": {
+                    "content-type": "application/json",
+                    "access-control-allow-origin": "*",
+                    "access-control-allow-methods": "GET, OPTIONS",
+                    "access-control-allow-headers": "Content-Type",
+                },
                 "body": json.dumps({"error": "No music files found in bucket"}),
             }
 
@@ -56,11 +68,22 @@ def lambda_handler(event, context):
         return {
             "statusCode": 200,
             "headers": {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
+                "content-type": "application/json",
+                "access-control-allow-origin": "*",
+                "access-control-allow-methods": "GET, OPTIONS",
+                "access-control-allow-headers": "Content-Type",
             },
             "body": json.dumps({"url": presigned_url, "filename": object_key}),
         }
 
     except ClientError as e:
-        return {"statusCode": 500, "body": json.dumps({"error": f"S3 error: {str(e)}"})}
+        return {
+            "statusCode": 500,
+            "headers": {
+                "content-type": "application/json",
+                "access-control-allow-origin": "*",
+                "access-control-allow-methods": "GET, OPTIONS",
+                "access-control-allow-headers": "Content-Type",
+            },
+            "body": json.dumps({"error": f"S3 error: {str(e)}"}),
+        }

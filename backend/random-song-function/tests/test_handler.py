@@ -109,5 +109,5 @@ class TestLambdaHandler:
 
         assert response["statusCode"] == 200
         assert "headers" in response
-        assert response["headers"]["Access-Control-Allow-Origin"] == "*"
-        assert response["headers"]["Content-Type"] == "application/json"
+        assert response["headers"]["access-control-allow-origin"] == "*"
+        assert response["headers"]["content-type"] == "application/json"
