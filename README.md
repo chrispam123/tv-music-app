@@ -1,6 +1,7 @@
 # TV Music App
 
 Aplicación serverless OPTIMIZADA para Smart TV Samsung que reproduce música aleatoria de fondo mientras muestra reloj y fecha en pantalla pero complatible con cualquier dispositvo que utilice un navegador web moderno.
+Url de acceso     https://d2bsisf49jeue.cloudfront.net
 
 ## Arquitectura
 
@@ -207,7 +208,7 @@ Con 1000 usuarios diarios el costo seguiría siendo menor a $10/mes debido a la 
 
 Para destruir toda la infraestructura y evitar costos:
 ```bash
-# Vaciar bucket de música primero
+# Vaciar bucket de música primeroDocs: Add comprehensive README with architecture, deployment, and usa…
 aws s3 rm s3://tv-music-app-dev-music-storage/ --recursive --profile bootstrap-admin
 
 # Destruir infraestructura con Terraform
