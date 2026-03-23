@@ -53,3 +53,13 @@ module "api_gateway" {
 
   tags = var.tags
 }
+
+# Frontend hosting on S3
+module "frontend_hosting" {
+  source = "../../modules/s3-frontend-hosting"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  tags = var.tags
+}

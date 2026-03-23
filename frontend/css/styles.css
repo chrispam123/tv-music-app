@@ -63,3 +63,26 @@ body {
 .success {
     color: #51cf66;
 }
+
+
+.play-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 30px 60px;
+    font-size: 48px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 40px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.play-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+}
+
+.play-button:active {
+    transform: translateY(-2px);
+}

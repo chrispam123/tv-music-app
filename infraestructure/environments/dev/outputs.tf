@@ -30,3 +30,13 @@ output "api_invoke_url" {
   description = "Full invoke URL for the API (use this to test with curl)"
   value       = module.api_gateway.stage_invoke_url
 }
+# Outputs from Frontend Hosting module
+output "frontend_website_url" {
+  description = "URL to access the frontend in TV browser"
+  value       = module.frontend_hosting.website_url
+}
+
+output "frontend_bucket_name" {
+  description = "Name of the frontend hosting bucket"
+  value       = module.frontend_hosting.bucket_name
+}
